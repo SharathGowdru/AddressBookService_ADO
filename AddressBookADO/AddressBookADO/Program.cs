@@ -20,8 +20,8 @@ namespace AddressBookADO
             person.AddressBookName = "book4";
             person.Type = "Family";
 
-            if (repo.AddEmployee(person))
-                Console.WriteLine("Records added successfully");
+            if (repo.DeleteEmployee(person))
+                Console.WriteLine("Records deleted successfully");
             Console.ReadKey();
         }
     }
