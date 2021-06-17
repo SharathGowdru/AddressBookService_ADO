@@ -10,44 +10,48 @@ namespace AddressBookADO
         public static string connectionString = @"Data Source = (localdb)\ProjectsV13;Initial Catalog = Address_book_service; Integrated Security = True; Connect Timeout = 30; Encrypt=False;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False";
         SqlConnection connection = new SqlConnection(connectionString);
 
-        public bool DeleteEmployee(AddressModel model)
+        public void GetAllEmployee()
         {
             try
             {
+                AddressModel addressModel = new AddressModel();
                 using (this.connection)
                 {
 
-                    SqlCommand command = new SqlCommand("delete from employee_payroll where firstname='Shashi'", this.connection);
-                    command.Parameters.AddWithValue("@FirstName", model.FirstName);
-                    command.Parameters.AddWithValue("@LastName", model.LastName);
-                    command.Parameters.AddWithValue("@Address", model.Address);
-                    command.Parameters.AddWithValue("@PhoneNumber", model.PhoneNumber);
-                    command.Parameters.AddWithValue("@zip", model.zip);
-                    command.Parameters.AddWithValue("@City", model.City);
-                    command.Parameters.AddWithValue("@State", model.State);
-                    command.Parameters.AddWithValue("@Email", model.Email);
-                    command.Parameters.AddWithValue("@AddressBookName", model.AddressBookName);
-                    command.Parameters.AddWithValue("@Type", model.Type);
+                    SqlCommand cmd = new SqlCommand(@"select * from employee_payroll where state='Hassan'", this.connection);
                     this.connection.Open();
-                    var result = command.ExecuteNonQuery();
-                    this.connection.Close();
-                    if (result != 0)
+                    SqlDataReader dr = cmd.ExecuteReader();
+                    if (dr.HasRows)
                     {
+                        while (dr.Read())
+                        {
+                            addressModel.FirstName = dr.GetString(0);
+                            addressModel.LastName = dr.GetString(1);
+                            addressModel.Address = dr.GetString(2);
+                            addressModel.PhoneNumber = dr.GetString(6);
+                            addressModel.zip = dr.GetInt32(5);
+                            addressModel.City = dr.GetString(3);
+                            addressModel.State = dr.GetString(4);
+                            addressModel.AddressBookName = dr.GetString(8);
+                            addressModel.Email = dr.GetString(7);
+                            addressModel.Type = dr.GetString(9);
 
-                        return true;
+                            System.Console.WriteLine(addressModel.FirstName + " " + addressModel.LastName + " " + addressModel.Address + " " + addressModel.City + " " + addressModel.zip + " " + addressModel.State + " " + addressModel.PhoneNumber + " " + addressModel.AddressBookName + " " + addressModel.Type);
+                            System.Console.WriteLine("\n");
+
+                        }
                     }
-                    return false;
+                    else
+                    {
+                        System.Console.WriteLine("No data found");
+
+                    }
                 }
             }
             catch (Exception e)
             {
-                Console.WriteLine(e.Message);
+                System.Console.WriteLine(e.Message);
             }
-            finally
-            {
-                this.connection.Close();
-            }
-            return false;
         }
     }
 }
